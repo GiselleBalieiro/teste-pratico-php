@@ -1,0 +1,179 @@
+openapi: 3.0.0
+info:
+  title: API de Pedidos
+  description: API para criação, consulta e atualização de pedidos com autenticação JWT.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8000
+    description: Servidor Local
+
+paths:
+  /workplace:
+    post:
+      summary: Verificar e criar estrutura da tabela de pedidos
+      description: Cria a tabela `pedidos` se ela não existir e adiciona colunas ausentes.
+      responses:
+        '200':
+          description: Estrutura verificada/criada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  table_created:
+                    type: boolean
+                  columns_added:
+                    type: array
+                    items:
+                      type: string
+                  columns_existing:
+                    type: array
+                    items:
+                      type: string
+        '500':
+          description: Erro ao verificar ou criar estrutura da tabela.
+
+  /login:
+    post:
+      summary: Autenticação de usuário
+      description: Retorna um token JWT válido.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                usuario:
+                  type: string
+                senha:
+                  type: string
+              required:
+                - usuario
+                - senha
+      responses:
+        '200':
+          description: Token JWT retornado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  token:
+                    type: string
+        '401':
+          description: Credenciais inválidas.
+
+  /pedidos:
+    get:
+      summary: Listar todos os pedidos
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de pedidos retornada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '500':
+          description: Erro ao buscar os pedidos.
+
+    post:
+      summary: Criar um novo pedido
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cliente_nome:
+                  type: string
+                descricao:
+                  type: string
+                status:
+                  type: string
+                  enum: [aberto, processando, enviado, entregue, cancelado]
+              required:
+                - cliente_nome
+                - status
+      responses:
+        '200':
+          description: Pedido criado com sucesso.
+        '400':
+          description: Dados inválidos.
+        '500':
+          description: Erro ao criar pedido.
+
+  /pedidos/{id}:
+    get:
+      summary: Consultar um pedido pelo ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Pedido retornado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Pedido não encontrado.
+        '500':
+          description: Erro ao buscar pedido.
+
+    put:
+      summary: Atualizar um pedido existente
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cliente_nome:
+                  type: string
+                descricao:
+                  type: string
+                status:
+                  type: string
+                  enum: [aberto, processando, enviado, entregue, cancelado]
+              required:
+                - cliente_nome
+                - status
+      responses:
+        '200':
+          description: Pedido atualizado com sucesso.
+        '400':
+          description: Dados inválidos.
+        '500':
+          description: Erro ao atualizar pedido.
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
