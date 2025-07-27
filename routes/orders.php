@@ -5,10 +5,13 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
 
 require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../auth/auth-jwt.php';
+
 
 $validStatus = ['aberto', 'processando', 'enviado', 'entregue', 'cancelado'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    protectEndpoint();
 
     $id = $_GET['id'] ?? null;
     $data = json_decode(file_get_contents("php://input"), true);
@@ -66,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    protectEndpoint();
 
     $data = json_decode(file_get_contents("php://input"), true);
 
@@ -117,6 +121,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    protectEndpoint();
+    
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
 
