@@ -3,6 +3,16 @@
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $method = $_SERVER['REQUEST_METHOD'];
 
+if ($requestUri === '/login') {
+    require_once __DIR__ . '/routes/login.php';
+    exit;
+}
+
+if ($requestUri === '/workplace') {
+    require_once __DIR__ . '/routes/workplace.php';
+    exit;
+}
+
 if ($requestUri === '/pedidos') {
     require_once __DIR__ . '/routes/orders.php';
     exit;
