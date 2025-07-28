@@ -29,6 +29,8 @@ Este projeto é uma API REST em PHP que utiliza autenticação via JWT para prot
    php -S localhost:8000
    ```
 
+> Certifique-se de que o MySQL está em execução (via WAMP, XAMPP, ou outro servidor local). A API depende da conexão com o banco configurado no arquivo `.env`.
+
 6. Execute a rota para criação da tabela e colunas:
    Envie uma requisição `POST` para:
    `http://localhost:8000/workplace`
@@ -74,6 +76,23 @@ Rotas como `/pedidos`, `/pedidos/{id}` (GET, POST, PUT) exigem esse token.
 **Header:**
 
 `Authorization: Bearer SEU_TOKEN_AQUI`
+
+
+## Testar as Rotas com Swagger (OpenAPI)
+
+Este projeto inclui um arquivo `openapi.yaml`, que contém a documentação da API no padrão **OpenAPI 3.0**.
+
+### Como usar:
+
+1. Acesse: [https://editor.swagger.io](https://editor.swagger.io)
+2. Clique em **File > Import File** e selecione o arquivo `openapi.yaml` deste projeto.
+3. O Swagger Editor irá carregar automaticamente a documentação completa da API.
+4. Para testar as rotas protegidas, clique no botão **Authorize** no topo da interface.
+5. Insira o token JWT no campo de autorização usando o formato `Bearer`.
+6. Agora você pode testar todas as rotas diretamente pela interface do Swagger.
+
+Isso facilita a visualização, documentação e testes das rotas disponíveis na API.
+
 
 ## Considerações
 
