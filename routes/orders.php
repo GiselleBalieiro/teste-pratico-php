@@ -3,6 +3,7 @@
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
+header("Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS");
 
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../auth/auth-jwt.php';
